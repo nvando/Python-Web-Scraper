@@ -33,7 +33,7 @@ cur.execute(
 )
 row = cur.fetchone()
 if row is not None:
-    print("Restarting existing crawl. Delete TheGuild.sqlite if you want to start a fresh crawl")
+    print("Restarting existing crawl. Delete KBCS.sqlite if you want to start a fresh crawl")
 else:
     # starting new crawl
     starturl = input("Enter URL: ")
