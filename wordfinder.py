@@ -37,7 +37,7 @@ def extract_sentences_body(soup, tags, target_word):
                     sent_count = sent_count + 1
 
 
-def extract_sentences_repeated_blocks(block, target_word):
+def extract_sentences_repeated_blocks(block, target_word, id=None):
     #  extract sentences containing target word
     #  from the footer or menu items within the header
     #  these blocks are repeated on every page
@@ -57,29 +57,33 @@ def extract_sentences_repeated_blocks(block, target_word):
         soup = BeautifulSoup(html, "html.parser")
 
         # extract header/footer from parsed html
-        extracted_block = soup.find(block).extract()
-        text = extracted_block.get_text(separator="\n")
-        sentences = re.split("\n", text)
-        count = 0
-        print(f"searching {block} ")
-        for s in sentences:
-            if target_word in s.lower():
-                cur.execute(
-                    """INSERT INTO Matches (page_id, path, sentence) VALUES ('NA', ?, ?)""",
-                    (block, s),
-                )
-                conn.commit()
-                print(f"""Found match in {block}. '{s}' added to database.""")
-                count = count + 1
-        print(f"sentences in {block} containing the search word: {count}")
-        cur.execute(
-            """INSERT INTO Pages (url, sentences, html) VALUES (?,? , 'NA')""",
-            (
-                block,
-                count,
-            ),
-        )
-        conn.commit()
+        searched_soup = soup.find(block, id)
+        if not searched_soup is None:
+            extracted_block = searched_soup.extract()
+            text = extracted_block.get_text(separator="\n")
+            sentences = re.split("\n", text)
+            count = 0
+            print(f"searching {block} ")
+            for s in sentences:
+                if target_word in s.lower():
+                    cur.execute(
+                        """INSERT INTO Matches (page_id, path, sentence) VALUES ('NA', ?, ?)""",
+                        (block, s),
+                    )
+                    conn.commit()
+                    print(f"""Found match in {block}. '{s}' added to database.""")
+                    count = count + 1
+            print(f"sentences in {block} containing the search word: {count}")
+            cur.execute(
+                """INSERT INTO Pages (url, sentences, html) VALUES (?,? , 'NA')""",
+                (
+                    block,
+                    count,
+                ),
+            )
+            conn.commit()
+        else:
+            print(f"could not extract {block}")
 
     else:
         print(f"The {block} has already been checked for matches")
@@ -105,7 +109,7 @@ ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
-target_word = input("Enter the word(s) you want to search the site for: ")
+target_word = input("Enter the word(s) you want to search the site for: ").lower()
 print(f"""The website will be searched for sentences which include the word(s) '{target_word}'.""")
 
 

@@ -131,7 +131,7 @@ while True:
             continue
         if href.endswith("/"):
             href = href[:-1]
-        # ignore links to images
+        # ignore links to images or pdfs
         if (
             href.endswith(".png")
             or href.endswith(".jpeg")
