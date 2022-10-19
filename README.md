@@ -1,7 +1,7 @@
 # Python Web Scraper
 
 
-This program uses Python and SQLite3 to scrape a pre-defined website and search for specific words within visible text on each page. The HTML is parsed using the Python library Beautiful Soup and the sentences containing the search word are stored in a SQLite database together with the page's URL. This program was build for an organisation that changed their name as part of a rebrand and needed to checQLite database together with the page's URLQLite database together with the page's URL all occurrences of their name within their WordPress website, and manually changed where required.
+This program uses Python and SQLite3 to scrape a pre-defined website and search for specific words within visible text on each page. The HTML is parsed using the Python library Beautiful Soup and the sentences containing the search word are stored in a SQLite database together with the page's URL. This program was build for an organisation that changed their name as part of a rebrand and needed to check all occurrences of their name within their WordPress website, and manually changed where required.
 
 
 The Program consists of two python files, which needs to be run seperately:
